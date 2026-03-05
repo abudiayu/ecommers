@@ -1,0 +1,86 @@
+:root {
+  --primary-color: #FFD700;
+  --primary-shade: #FFC107;
+  --primary-light: #FFEB3B;
+  --accent-color: #FFA500;
+  --accent-shade: #FF8C00;
+  --dark-bg: #1a1a1a;
+  --darker-bg: #0a0a0a;
+  --light-bg: #FFFEF7;
+  --text-dark: #2c2c2c;
+  --text-light: #666666;
+  --white: #FFFFFF;
+  --gold: #FFD700;
+  --dark-gold: #DAA520;
+  
+  /* Theme variables (can be changed dynamically) */
+  --theme-primary: #FFD700;
+  --theme-secondary: #FFC107;
+  --theme-light: #FFEB3B;
+  
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+  --light-bg: #1a1a1a;
+  --text-dark: #e0e0e0;
+  --text-light: #b0b0b0;
+  --white: #2c2c2c;
+  background-color: #1a1a1a;
+  color: #e0e0e0;
+}
+
+body.dark-mode .header_container,
+body.dark-mode .lower_container,
+body.dark-mode .footer {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+}
+
+body.dark-mode .search {
+  background: #2c2c2c;
+  border: 1px solid #444;
+}
+
+body.dark-mode .search input {
+  background: #2c2c2c;
+  color: #e0e0e0;
+}
+
+body.dark-mode .search select {
+  background: #3c3c3c;
+  color: #e0e0e0;
+}
+
+body.dark-mode .product_card,
+body.dark-mode .category_card,
+body.dark-mode .stat_card,
+body.dark-mode .settings_card {
+  background: #2c2c2c;
+  border: 1px solid #444;
+}
+
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4 {
+  color: #e0e0e0;
+}
+
+body.dark-mode p {
+  color: #b0b0b0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--light-bg);
+  color: var(--text-dark);
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}

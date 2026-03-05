@@ -1,0 +1,25 @@
+.container{
+    background: linear-gradient(135deg, #FFFEF7 0%, #FFF9E6 100%);
+    padding: 30px;
+}
+.order_container{
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(255, 215, 0, 0.15);
+    border: 2px solid #FFD700;
+}
+.order_container h2{
+    border-bottom: 3px solid #FFD700;
+    padding: 20px;
+    color: #1a1a1a;
+}
+.order_container p{
+    padding: 12px;
+}
+.order_container img{
+    width: 100px !important;
+}
+.order_container div{
+    height: auto !important;
+}
