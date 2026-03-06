@@ -19,6 +19,12 @@ function LowerHeader() {
           <p>{t('all')}</p>
         </li>
         <li>
+          <Link to="/shop">
+            {t('shop')}
+            <MdKeyboardArrowRight className={classes.hide_icon}/>
+          </Link>
+        </li>
+        <li>
           <Link to="/deals">
             {t('todaysDeals')}
             <MdKeyboardArrowRight className={classes.hide_icon}/>

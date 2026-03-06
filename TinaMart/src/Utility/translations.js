@@ -11,6 +11,7 @@ export const translations = {
     
     // Navigation
     all: "ALL",
+    shop: "Shop",
     todaysDeals: "Today's Deals",
     customerService: "Customer Service",
     registry: "Registry",
@@ -80,6 +81,10 @@ export const translations = {
     view: "View",
     add: "Add",
     
+    // Partners
+    ourPartners: "Our Trusted Partners",
+    trustedByLeading: "Trusted by leading Ethiopian companies",
+    
     // Footer Services
     tinaMartMusic: "TinaMart Music",
     tinaMartMusicDesc: "Stream millions of Ethiopian songs",
@@ -135,6 +140,7 @@ export const translations = {
     
     // Navigation
     all: "ሁሉም",
+    shop: "ሱቅ",
     todaysDeals: "የዛሬ ቅናሾች",
     customerService: "የደንበኛ አገልግሎት",
     registry: "መዝገብ",
@@ -203,6 +209,10 @@ export const translations = {
     edit: "አርትዕ",
     view: "ይመልከቱ",
     add: "ጨምር",
+    
+    // Partners
+    ourPartners: "የእኛ የታመኑ አጋሮች",
+    trustedByLeading: "በመሪ የኢትዮጵያ ኩባንያዎች የታመነ",
     
     // Footer Services
     tinaMartMusic: "ቲናማርት ሙዚቃ",

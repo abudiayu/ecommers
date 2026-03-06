@@ -33,7 +33,10 @@
 
 @media (max-width: 768px) {
     .carousel_arrow {
-        width: 40px !important;
-        height: 40px !important;
+        display: none !important;
+    }
+    
+    .hero_img::before {
+        height: 150px;
     }
 }

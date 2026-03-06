@@ -18,6 +18,7 @@ import Registry from './pages/Registry/Registry';
 import GiftCards from './pages/GiftCards/GiftCards';
 import Sell from './pages/Sell/Sell';
 import Admin from './pages/Admin/Admin';
+import Shope from './pages/shope/Shope';
 
 const stripePromise = loadStripe(
   'pk_test_51T7Not3G4ccsiEZgtq7EmHLugvczt9LSjpJGZPZfjkuTP1XrMBBe7H6OIH7Z8Q0386ikk1EpvN8SeAfNxClmXCQj008IpS4Hco');
@@ -33,6 +34,7 @@ function Routing() {
             <Route path='/registry' element={<Registry/>}/>
             <Route path='/gift-cards' element={<GiftCards/>}/>
             <Route path='/sell' element={<Sell/>}/>
+            <Route path='/shop' element={<Shope/>}/>
             <Route path='/admin' element={
              
                 <Admin/>
