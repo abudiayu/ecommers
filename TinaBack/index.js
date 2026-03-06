@@ -17,7 +17,7 @@ app.use(express.json());
 // Test route
 app.get("/", (req, res) => {
   res.status(200).json({
-    message: "Success! TinaMart API is running.",
+    message: "Success abudy!",
   });
 });
 
