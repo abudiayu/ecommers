@@ -5,11 +5,15 @@ import classes from './Product.module.css';
 import { Link } from 'react-router-dom';
 import { DataContext } from '../DataProvider/DataProvider';
 import { Type } from '../../Utility/action.type';
+import { useSettings } from '../../Utility/SettingsContext';
+import { useTranslation } from '../../Utility/translations';
 
 function ProductCard({ product, flex, renderDesc, renderAdd }) {
     const { id, title, price, image, rating, description } = product;
 
-    const [state, dispatch] = useContext(DataContext)
+    const [state, dispatch] = useContext(DataContext);
+    const { settings } = useSettings();
+    const t = useTranslation(settings.language);
 
     // console.log(state)
     const addToCart = () => {
@@ -43,7 +47,7 @@ function ProductCard({ product, flex, renderDesc, renderAdd }) {
             </div>  
             {
                 renderAdd &&<button className={classes.button} onClick={addToCart}>
-                        Add to Cart
+                        {t('addToCart')}
                     </button>
             }      
 

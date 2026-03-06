@@ -3,44 +3,48 @@ import { AiOutlineMenu } from "react-icons/ai";
 import classes from "./header.module.css";
 import { Link } from 'react-router-dom';
 import { MdKeyboardArrowRight } from "react-icons/md";
+import { useSettings } from '../../Utility/SettingsContext';
+import { useTranslation } from '../../Utility/translations';
 
 function LowerHeader() {
   const [toggle, setToggle] = useState(false);
+  const { settings } = useSettings();
+  const t = useTranslation(settings.language);
 
   return (
     <div className={classes.lower_container}>
       <ul className={toggle ? classes.show : classes.hide}>
         <li onClick={() => setToggle(!toggle)} className={classes.view}>
           <AiOutlineMenu />
-          <p>ALL</p>
+          <p>{t('all')}</p>
         </li>
         <li>
           <Link to="/deals">
-            Today's Deals 
+            {t('todaysDeals')}
             <MdKeyboardArrowRight className={classes.hide_icon}/>
           </Link>
         </li>
         <li>
           <Link to="/customer-service">
-            Customer Service
+            {t('customerService')}
             <MdKeyboardArrowRight className={classes.hide_icon}/>
           </Link>
         </li>
         <li>
           <Link to="/registry">
-            Registry
+            {t('registry')}
             <MdKeyboardArrowRight className={classes.hide_icon}/>
           </Link>
         </li>
         <li>
           <Link to="/gift-cards">
-            Gift Cards
+            {t('giftCards')}
             <MdKeyboardArrowRight className={classes.hide_icon}/>
           </Link>
         </li>
         <li>
           <Link to="/sell">
-            Sell
+            {t('sell')}
             <MdKeyboardArrowRight className={classes.hide_icon}/>
           </Link>
         </li>

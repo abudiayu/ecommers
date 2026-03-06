@@ -5,43 +5,46 @@ import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import { MdEmail } from "react-icons/md";
 import { FaPhone, FaTelegram, FaLinkedin } from "react-icons/fa";
 import { useSettings } from "../../Utility/SettingsContext";
+import { useTranslation } from "../../Utility/translations";
+import Logo3 from "../../assets/ttina.png"
 
 export default function Footer() {
   const { settings } = useSettings();
+  const t = useTranslation(settings.language);
   return (
     <footer className={classes.footer} id="top">
 
       {/* Top links */}
       <div className={classes.footerLinks}>
         <div>
-          <h4>Get to Know Us</h4>
-          <Link to="/">Careers</Link>
-          <Link to="/">Blog</Link>
-          <Link to="/">About Amazon</Link>
-          <Link to="/">Investor Relations</Link>
+          <h4>{t('getToKnowUs')}</h4>
+          <Link to="/">{t('careers')}</Link>
+          <Link to="/">{t('blog')}</Link>
+          <Link to="/">{t('aboutUs')}</Link>
+          <Link to="/">{t('investorRelations')}</Link>
         </div>
 
         <div>
-          <h4>Make Money with Us</h4>
-          <Link to="/">Sell products</Link>
-          <Link to="/">Sell on Amazon Business</Link>
-          <Link to="/">Become an Affiliate</Link>
-          <Link to="/">Advertise Your Products</Link>
+          <h4>{t('makeMoneyWithUs')}</h4>
+          <Link to="/sell">{t('sellProducts')}</Link>
+          <Link to="/">{t('sellOnBusiness')}</Link>
+          <Link to="/">{t('becomeAffiliate')}</Link>
+          <Link to="/">{t('advertiseProducts')}</Link>
         </div>
 
         <div>
-          <h4>Amazon Payment Products</h4>
-          <Link to="/">Amazon Business Card</Link>
-          <Link to="/">Shop with Points</Link>
-          <Link to="/">Reload Your Balance</Link>
+          <h4>{t('paymentProducts')}</h4>
+          <Link to="/">{t('businessCard')}</Link>
+          <Link to="/">{t('shopWithPoints')}</Link>
+          <Link to="/">{t('reloadBalance')}</Link>
         </div>
 
         <div>
-          <h4>Let Us Help You</h4>
-          <Link to="/">Your Account</Link>
-          <Link to="/">Your Orders</Link>
-          <Link to="/">Shipping Rates & Policies</Link>
-          <Link to="/">Help</Link>
+          <h4>{t('letUsHelp')}</h4>
+          <Link to="/">{t('yourAccount')}</Link>
+          <Link to="/">{t('yourOrders')}</Link>
+          <Link to="/">{t('shippingPolicies')}</Link>
+          <Link to="/">{t('help')}</Link>
         </div>
       </div>
 
@@ -51,7 +54,7 @@ export default function Footer() {
       {/* Logo + locale buttons */}
       <div className={classes.localeBar}>
         <img
-            src="https://pngimg.com/uploads/amazon/amazon_PNG11.png"
+            src={Logo3}
             alt="TinaMart"
             className={classes.logo}
         />
@@ -77,30 +80,30 @@ export default function Footer() {
       {/* Services grid */}
       <div className={classes.servicesGrid}>
         {[
-          ["Amazon Music", "Stream millions of songs"],
-          ["Amazon Ads", "Reach customers everywhere"],
-          ["6pm", "Deals on fashion brands"],
-          ["AbeBooks", "Books, art & collectibles"],
-          ["ACX", "Audiobook Publishing Made Easy"],
-          ["Sell on Amazon", "Start a Selling Account"],
-          ["Veeqo", "Shipping & Inventory Management"],
-          ["Amazon Business", "Everything For Your Business"],
-          ["AmazonGlobal", "Ship Orders Internationally"],
-          ["AWS", "Scalable Cloud Computing"],
-          ["Audible", "Books & Original Audio"],
-          ["IMDb", "Movies, TV & Celebrities"],
-          ["Kindle Direct Publishing", "Self-Publish Made Easy"],
-          ["Prime Video Direct", "Video Distribution"],
-          ["Shopbop", "Designer Fashion"],
-          ["Woot!", "Deals & Shenanigans"],
-          ["Zappos", "Shoes & Clothing"],
-          ["Ring", "Smart Home Security"],
-          ["Blink", "Smart Home Security"],
-          ["PillPack", "Pharmacy Simplified"],
-        ].map(([title, desc]) => (
-          <Link to="/" key={title} className={classes.serviceItem}>
-            <span className={classes.serviceTitle}>{title}</span>
-            <span className={classes.serviceDesc}>{desc}</span>
+          ["tinaMartMusic", "tinaMartMusicDesc"],
+          ["tinaMartAds", "tinaMartAdsDesc"],
+          ["tinaBayFashion", "tinaBayFashionDesc"],
+          ["tinaBayBooks", "tinaBayBooksDesc"],
+          ["tinaMartAudio", "tinaMartAudioDesc"],
+          ["sellOnTinaMart", "sellOnTinaMartDesc"],
+          ["tinaMartLogistics", "tinaMartLogisticsDesc"],
+          ["tinaMartBusiness", "tinaMartBusinessDesc"],
+          ["tinaMartGlobal", "tinaMartGlobalDesc"],
+          ["tinaMartCloud", "tinaMartCloudDesc"],
+          ["tinaMartAudible", "tinaMartAudibleDesc"],
+          ["tinaMartMedia", "tinaMartMediaDesc"],
+          ["tinaMartPublishing", "tinaMartPublishingDesc"],
+          ["tinaMartVideo", "tinaMartVideoDesc"],
+          ["tinaBayDesigner", "tinaBayDesignerDesc"],
+          ["tinaMartDeals", "tinaMartDealsDesc"],
+          ["tinaBayShoes", "tinabayShoesDesc"],
+          ["tinaMartSmartHome", "tinaMartSmartHomeDesc"],
+          ["tinaMartSecurity", "tinaMartSecurityDesc"],
+          ["tinaMartPharmacy", "tinaMartPharmacyDesc"],
+        ].map(([titleKey, descKey]) => (
+          <Link to="/" key={titleKey} className={classes.serviceItem}>
+            <span className={classes.serviceTitle}>{t(titleKey)}</span>
+            <span className={classes.serviceDesc}>{t(descKey)}</span>
           </Link>
         ))}
       </div>
@@ -108,12 +111,12 @@ export default function Footer() {
       {/* Legal */}
       <div className={classes.legal}>
         <div className={classes.legalLinks}>
-          <Link to="/">Conditions of Use</Link>
-          <Link to="/">Privacy Notice</Link>
+          <Link to="/">{t('conditionsOfUse')}</Link>
+          <Link to="/">{t('privacyNotice')}</Link>
           <Link to="/">Consumer Health Data Privacy Disclosure</Link>
           <Link to="/">Your Ads Privacy Choices</Link>
         </div>
-        <p className={classes.copyright}>© 1996–2025, {settings.storeName}.com, Inc. | Developed by ABDUL QADIR</p>
+        <p className={classes.copyright}>{t('copyright')}</p>
         
         <div className={classes.contactInfo}>
             <a href={`mailto:${settings.storeEmail}`} target="_blank" rel="noopener noreferrer">

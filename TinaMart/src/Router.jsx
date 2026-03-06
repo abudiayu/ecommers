@@ -10,6 +10,7 @@ import Results from "./pages/Results/Result";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import {CheckoutProvider} from '@stripe/react-stripe-js/checkout';
 import ProtectedRouting from './pages/ProtectedRouting/ProtectedRouting';
 import Deals from './pages/Deals/Deals';
 import CustomerService from './pages/CustomerService/CustomerService';
@@ -19,9 +20,7 @@ import Sell from './pages/Sell/Sell';
 import Admin from './pages/Admin/Admin';
 
 const stripePromise = loadStripe(
-  "pk_test_51Sd8oV73eHHIhNhmzMQiLcXh7rKw7SACSCJ1X5guHh8bPcHH4u6QMnCOoVRjTqpIwZYWxVDStWAmwCToboe0Q3O200dwi35pvw"
-);
-
+  'pk_test_51T7Not3G4ccsiEZgtq7EmHLugvczt9LSjpJGZPZfjkuTP1XrMBBe7H6OIH7Z8Q0386ikk1EpvN8SeAfNxClmXCQj008IpS4Hco');
 
 function Routing() {
   return (

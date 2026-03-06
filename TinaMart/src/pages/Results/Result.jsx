@@ -5,11 +5,15 @@ import { useParams } from 'react-router-dom';
 import ProductCard from '../../components/Product/ProductCard';
 import Loader from "../../components/Loader/Loding";
 import { useProducts } from '../../Utility/ProductContext';
+import { useSettings } from '../../Utility/SettingsContext';
+import { useTranslation } from '../../Utility/translations';
 
 function Result() {
   const [results, setResults] = useState([]);
   const { products, loading } = useProducts();
   const { categoryName } = useParams();
+  const { settings } = useSettings();
+  const t = useTranslation(settings.language);
 
   useEffect(() => {
     if (products.length > 0) {
@@ -22,8 +26,8 @@ function Result() {
     <LayOut>
       {
         loading ? (<Loader/>) : (<section> 
-            <h1 style={{padding:"30px"}}>Results</h1>
-            <p style={{padding:"30px"}}>Category / {categoryName}</p>
+            <h1 style={{padding:"30px"}}>{t('results')}</h1>
+            <p style={{padding:"30px"}}>{t('category')} / {categoryName}</p>
             <hr />
             <div className={classes.products_cotainer}>
               {results.map((product) => (

@@ -9,6 +9,7 @@ import {
 import { ClipLoader } from "react-spinners";
 import { DataContext } from "../../components/DataProvider/DataProvider";// Correct usage of DataContext
 import { Type } from "../../Utility/action.type";
+import Logo2 from "../../assets/ttina.png"
 
 function Auth() {
   const [email, setEmail] = useState("");
@@ -28,14 +29,13 @@ function Auth() {
   // Auth handler function for signIn and signUp
   const authHandler = (e) => {
     e.preventDefault();
-    const action = e.currentTarget.name;
+    const action = e.nativeEvent.submitter.name;
 
     if (action === "signIn") {
       setLoading({ ...loading, signIn: true });
 
       signInWithEmailAndPassword(auth, email, password)
         .then((userInfo) => {
-          // console.log(userInfo);
           dispatch({
             type: Type.SET_USER,
             user: userInfo.user,
@@ -47,12 +47,11 @@ function Auth() {
           setError(err.message);
           setLoading({ ...loading, signIn: false });
         });
-    } else {
+    } else if (action === "signUp") {
       setLoading({ ...loading, signUp: true });
 
       createUserWithEmailAndPassword(auth, email, password)
         .then((userInfo) => {
-          // console.log(userInfo);
           dispatch({
             type: Type.SET_USER,
             user: userInfo.user,
@@ -71,8 +70,8 @@ function Auth() {
     <section className={classes.login}>
       <Link to={"/"}>
         <img
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/603px-Amazon_logo.svg.png"
-          alt="Amazon Logo"
+          src={Logo2}
+          alt="TinaBay"
         />
       </Link>
       <div className={classes.login_container}>
@@ -121,12 +120,11 @@ function Auth() {
             type="submit"
             name="signIn"
             className={classes.login_signInButton}
-            onClick={authHandler}
           >
             {loading.signIn ? <ClipLoader color="#000" size={14} /> : "Sign In"}
           </button>
           <p>
-            By signing in, you agree to Amazon's Terms, Privacy Policy, and
+            By signing in, you agree to TinaMart's Terms, Privacy Policy, and
             Cookie Notice.
           </p>
           {/* Create account button */}
@@ -134,12 +132,11 @@ function Auth() {
             type="submit"
             name="signUp"
             className={classes.login_registerButton}
-            onClick={authHandler}
           >
             {loading.signUp ? (
               <ClipLoader color="#000" size={14} />
             ) : (
-              "Create Your Amazon Account"
+              "Create Your TinaMart Account"
             )}
           </button>
         </form>

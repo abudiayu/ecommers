@@ -1,22 +1,25 @@
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBvHkQwHsUYEfnpDt2uYR3G5g2BubyJrIY",
-  authDomain: "fir-196c7.firebaseapp.com",
-  projectId: "fir-196c7",
-  storageBucket: "fir-196c7.firebasestorage.app",
-  messagingSenderId: "1020882852258",
-  appId: "1:1020882852258:web:a0d8ce878b94ed2e4abafb",
+  apiKey: "AIzaSyCW7S_auZ27-DpiKiIBszwMC7WDgJHDs1E",
+  authDomain: "tina-bay.firebaseapp.com",
+  projectId: "tina-bay",
+  storageBucket: "tina-bay.firebasestorage.app",
+  messagingSenderId: "748384631888",
+  appId: "1:748384631888:web:1ddfe40fd08d010922e555",
   measurementId: "G-97PF3CQVCW"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
+// Initialize Firebase Authentication and get a reference to the service
 export const auth = getAuth(app);
+
+// Initialize Cloud Firestore and get a reference to the service
 export const db = getFirestore(app);
-export const analytics = getAnalytics(app);
 
 export default app;
+

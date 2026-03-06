@@ -8,6 +8,7 @@ import { DataContext } from '../../components/DataProvider/DataProvider';
 import Loader from '../../components/Loader/Loding';
 import { useSettings } from '../../Utility/SettingsContext';
 import { useProducts } from '../../Utility/ProductContext';
+import { useTranslation } from '../../Utility/translations';
 
 const Admin = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -16,6 +17,7 @@ const Admin = () => {
   const [loading, setLoading] = useState(true);
   const [{ basket, user }] = useContext(DataContext);
   const { settings, updateSettings, resetSettings } = useSettings();
+  const t = useTranslation(settings.language);
   
   // Form state for settings
   const [formData, setFormData] = useState(settings);
@@ -289,31 +291,31 @@ const Admin = () => {
               className={activeTab === 'dashboard' ? classes.active : ''}
               onClick={() => setActiveTab('dashboard')}
             >
-              <MdDashboard /> Dashboard
+              <MdDashboard /> {t('dashboard')}
             </li>
             <li 
               className={activeTab === 'products' ? classes.active : ''}
               onClick={() => setActiveTab('products')}
             >
-              <MdInventory /> Products
+              <MdInventory /> {t('products')}
             </li>
             <li 
               className={activeTab === 'users' ? classes.active : ''}
               onClick={() => setActiveTab('users')}
             >
-              <FaUsers /> Users
+              <FaUsers /> {t('users')}
             </li>
             <li 
               className={activeTab === 'analytics' ? classes.active : ''}
               onClick={() => setActiveTab('analytics')}
             >
-              <FaChartLine /> Analytics
+              <FaChartLine /> {t('analytics')}
             </li>
             <li 
               className={activeTab === 'settings' ? classes.active : ''}
               onClick={() => setActiveTab('settings')}
             >
-              <FaCog /> Settings
+              <FaCog /> {t('settings')}
             </li>
           </ul>
         </div>
@@ -416,7 +418,7 @@ const Admin = () => {
           {activeTab === 'products' && (
             <div className={classes.tab_content}>
               <div className={classes.tab_header}>
-                <h1 className={classes.page_title}>Product Management ({products.length} Products)</h1>
+                <h1 className={classes.page_title}>{t('productManagement')} ({products.length} {t('products')})</h1>
                 <div className={classes.header_actions}>
                   {canUndo && (
                     <button className={classes.undo_button} onClick={handleUndo} title="Undo last action">
@@ -424,7 +426,7 @@ const Admin = () => {
                     </button>
                   )}
                   <button className={classes.add_button} onClick={handleAddProduct}>
-                    + Add New Product
+                    + {t('addNewProduct')}
                   </button>
                 </div>
               </div>
@@ -471,7 +473,7 @@ const Admin = () => {
 
           {activeTab === 'users' && (
             <div className={classes.tab_content}>
-              <h1 className={classes.page_title}>User Management ({users.length} Users)</h1>
+              <h1 className={classes.page_title}>User Management ({users.length} {t('users')})</h1>
               <div className={classes.users_table_container}>
                 <table className={classes.users_table}>
                   <thead>
@@ -529,7 +531,7 @@ const Admin = () => {
 
           {activeTab === 'analytics' && (
             <div className={classes.tab_content}>
-              <h1 className={classes.page_title}>Analytics & Reports</h1>
+              <h1 className={classes.page_title}>{t('analytics')} & Reports</h1>
               
               {/* Key Metrics Overview */}
               <div className={classes.metrics_overview}>
