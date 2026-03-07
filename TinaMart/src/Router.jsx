@@ -12,12 +12,15 @@ import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import {CheckoutProvider} from '@stripe/react-stripe-js/checkout';
 import ProtectedRouting from './pages/ProtectedRouting/ProtectedRouting';
+import AdminProtectedRoute from './pages/ProtectedRouting/AdminProtectedRoute';
+import ShopperProtectedRoute from './pages/ProtectedRouting/ShopperProtectedRoute';
 import Deals from './pages/Deals/Deals';
 import CustomerService from './pages/CustomerService/CustomerService';
 import Registry from './pages/Registry/Registry';
 import GiftCards from './pages/GiftCards/GiftCards';
 import Sell from './pages/Sell/Sell';
 import Admin from './pages/Admin/Admin';
+import ShopperDashboard from './pages/ShopperDashboard/ShopperDashboard';
 import Shope from './pages/shope/Shope';
 
 const stripePromise = loadStripe(
@@ -36,10 +39,15 @@ function Routing() {
             <Route path='/sell' element={<Sell/>}/>
             <Route path='/shop' element={<Shope/>}/>
             <Route path='/admin' element={
-             
+              <AdminProtectedRoute msg={"Admin access required!"} redirect={"/admin"}>
                 <Admin/>
-
-              }/>
+              </AdminProtectedRoute>
+            }/>
+            <Route path='/shopper-dashboard' element={
+              <ShopperProtectedRoute msg={"Shopper access required!"} redirect={"/shopper-dashboard"}>
+                <ShopperDashboard/>
+              </ShopperProtectedRoute>
+            }/>
             <Route path='/payment' element={
               <ProtectedRouting msg={"You must log in to pay !"} redirect={"/payment"}>
 

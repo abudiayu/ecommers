@@ -14,6 +14,7 @@ const Admin = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const { products, loading: productsLoading, addProduct, updateProduct, deleteProduct, undo, canUndo } = useProducts();
   const [users, setUsers] = useState([]);
+  const [shoppers, setShoppers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [{ basket, user }] = useContext(DataContext);
   const { settings, updateSettings, resetSettings } = useSettings();
@@ -40,6 +41,27 @@ const Admin = () => {
     rating: { rate: 0, count: 0 }
   });
 
+  // Shopper form state
+  const [shopperForm, setShopperForm] = useState({
+    shopName: '',
+    ownerName: '',
+    email: '',
+    password: '',
+    phone: '',
+    address: '',
+    logo: '',
+    description: '',
+    status: 'active'
+  });
+
+  // Load shoppers from localStorage
+  useEffect(() => {
+    const savedShoppers = localStorage.getItem('tinamartShoppers');
+    if (savedShoppers) {
+      setShoppers(JSON.parse(savedShoppers));
+    }
+  }, []);
+
   useEffect(() => {
     setFormData(settings);
   }, [settings]);
@@ -48,8 +70,9 @@ const Admin = () => {
     const fetchUsers = async () => {
       setLoading(true);
       try {
-        const usersRes = await axios.get('https://fakestoreapi.com/users');
-        setUsers(usersRes.data);
+        // Fetch real users from localStorage
+        const registeredUsers = JSON.parse(localStorage.getItem('tinamartUsers') || '[]');
+        setUsers(registeredUsers);
       } catch (error) {
         console.error('Error fetching users:', error);
       } finally {
@@ -216,41 +239,123 @@ const Admin = () => {
     setShowViewModal(true);
   };
 
-  const handleEditUser = (user) => {
-    setSelectedItem(user);
-    setShowEditModal(true);
-  };
-
   const handleDeleteUser = (user) => {
     setSelectedItem(user);
     setShowDeleteModal(true);
   };
 
   const confirmDeleteUser = () => {
-    setUsers(users.filter(u => u.id !== selectedItem.id));
+    const updatedUsers = users.filter(u => u.id !== selectedItem.id);
+    setUsers(updatedUsers);
+    localStorage.setItem('tinamartUsers', JSON.stringify(updatedUsers));
     setShowDeleteModal(false);
-    setSaveMessage(`✓ User ${selectedItem.username} deleted successfully!`);
+    setSaveMessage(`✓ User ${selectedItem.email} deleted successfully!`);
     setTimeout(() => setSaveMessage(''), 3000);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const [productsRes, usersRes] = await Promise.all([
-          axios.get('https://fakestoreapi.com/products'),
-          axios.get('https://fakestoreapi.com/users')
-        ]);
-        setProducts(productsRes.data);
-        setUsers(usersRes.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
+  // Shopper Management Functions
+  const handleAddShopper = () => {
+    setShopperForm({
+      shopName: '',
+      ownerName: '',
+      email: '',
+      password: '',
+      phone: '',
+      address: '',
+      logo: '',
+      description: '',
+      status: 'active'
+    });
+    setShowAddModal(true);
+  };
+
+  const handleShopperFormChange = (e) => {
+    const { name, value } = e.target;
+    setShopperForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSaveNewShopper = () => {
+    if (!shopperForm.shopName || !shopperForm.ownerName || !shopperForm.email || !shopperForm.password) {
+      alert('Please fill in all required fields (Shop Name, Owner Name, Email, Password)');
+      return;
+    }
+
+    const newShopper = {
+      id: Date.now(),
+      ...shopperForm,
+      createdAt: new Date().toISOString(),
+      productsCount: 0
     };
-    fetchData();
-  }, []);
+
+    const updatedShoppers = [...shoppers, newShopper];
+    setShoppers(updatedShoppers);
+    localStorage.setItem('tinamartShoppers', JSON.stringify(updatedShoppers));
+    
+    setShowAddModal(false);
+    setSaveMessage(`✓ Shopper "${newShopper.shopName}" registered successfully!`);
+    setTimeout(() => setSaveMessage(''), 3000);
+  };
+
+  const handleEditShopper = (shopper) => {
+    setSelectedItem(shopper);
+    setShopperForm({
+      shopName: shopper.shopName,
+      ownerName: shopper.ownerName,
+      email: shopper.email,
+      password: shopper.password,
+      phone: shopper.phone,
+      address: shopper.address,
+      logo: shopper.logo,
+      description: shopper.description,
+      status: shopper.status
+    });
+    setShowEditModal(true);
+  };
+
+  const handleUpdateShopper = () => {
+    if (!shopperForm.shopName || !shopperForm.ownerName || !shopperForm.email) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    const updatedShoppers = shoppers.map(s => 
+      s.id === selectedItem.id 
+        ? { ...s, ...shopperForm, updatedAt: new Date().toISOString() }
+        : s
+    );
+
+    setShoppers(updatedShoppers);
+    localStorage.setItem('tinamartShoppers', JSON.stringify(updatedShoppers));
+    
+    setShowEditModal(false);
+    setSaveMessage(`✓ Shopper "${shopperForm.shopName}" updated successfully!`);
+    setTimeout(() => setSaveMessage(''), 3000);
+  };
+
+  const handleDeleteShopper = (shopper) => {
+    setSelectedItem(shopper);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDeleteShopper = () => {
+    const updatedShoppers = shoppers.filter(s => s.id !== selectedItem.id);
+    setShoppers(updatedShoppers);
+    localStorage.setItem('tinamartShoppers', JSON.stringify(updatedShoppers));
+    
+    setShowDeleteModal(false);
+    setSaveMessage(`✓ Shopper "${selectedItem.shopName}" removed successfully!`);
+    setTimeout(() => setSaveMessage(''), 3000);
+  };
+
+  const handleViewShopper = (shopper) => {
+    setSelectedItem(shopper);
+    setShowViewModal(true);
+  };
+
+  // Removed duplicate fetchData useEffect - users are now fetched from localStorage above
 
   // Calculate real statistics
   const totalRevenue = products.reduce((sum, product) => sum + product.price, 0);
@@ -298,6 +403,12 @@ const Admin = () => {
               onClick={() => setActiveTab('products')}
             >
               <MdInventory /> {t('products')}
+            </li>
+            <li 
+              className={activeTab === 'shoppers' ? classes.active : ''}
+              onClick={() => setActiveTab('shoppers')}
+            >
+              <FaShoppingCart /> Shoppers
             </li>
             <li 
               className={activeTab === 'users' ? classes.active : ''}
@@ -471,60 +582,128 @@ const Admin = () => {
             </div>
           )}
 
+          {activeTab === 'shoppers' && (
+            <div className={classes.tab_content}>
+              <div className={classes.tab_header}>
+                <h1 className={classes.page_title}>Shopper Management ({shoppers.length} Shoppers)</h1>
+                <button className={classes.add_button} onClick={handleAddShopper}>
+                  + Register New Shopper
+                </button>
+              </div>
+              
+              <div className={classes.shoppers_grid}>
+                {shoppers.length === 0 ? (
+                  <div className={classes.no_results}>
+                    <h3>No Shoppers Registered</h3>
+                    <p>Click "Register New Shopper" to add your first shopper</p>
+                  </div>
+                ) : (
+                  shoppers.map((shopper) => (
+                    <div key={shopper.id} className={classes.shopper_card}>
+                      <div className={classes.shopper_logo}>
+                        {shopper.logo ? (
+                          <img src={shopper.logo} alt={shopper.shopName} />
+                        ) : (
+                          <div className={classes.logo_placeholder}>
+                            {shopper.shopName.charAt(0)}
+                          </div>
+                        )}
+                      </div>
+                      <div className={classes.shopper_info}>
+                        <h3>{shopper.shopName}</h3>
+                        <p className={classes.owner_name}>Owner: {shopper.ownerName}</p>
+                        <p className={classes.shopper_email}>{shopper.email}</p>
+                        <p className={classes.shopper_phone}>{shopper.phone}</p>
+                        <span className={`${classes.status_badge} ${classes[shopper.status]}`}>
+                          {shopper.status}
+                        </span>
+                      </div>
+                      <div className={classes.shopper_actions}>
+                        <button 
+                          className={classes.action_btn} 
+                          onClick={() => handleViewShopper(shopper)}
+                          title="View Details"
+                        >
+                          <FaEye />
+                        </button>
+                        <button 
+                          className={classes.action_btn} 
+                          onClick={() => handleEditShopper(shopper)}
+                          title="Edit Shopper"
+                        >
+                          <FaEdit />
+                        </button>
+                        <button 
+                          className={classes.action_btn_danger} 
+                          onClick={() => handleDeleteShopper(shopper)}
+                          title="Remove Shopper"
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
+
           {activeTab === 'users' && (
             <div className={classes.tab_content}>
               <h1 className={classes.page_title}>User Management ({users.length} {t('users')})</h1>
               <div className={classes.users_table_container}>
-                <table className={classes.users_table}>
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th>Username</th>
-                      <th>Phone</th>
-                      <th>City</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users.map((userItem) => (
-                      <tr key={userItem.id}>
-                        <td>{userItem.id}</td>
-                        <td>{userItem.name.firstname} {userItem.name.lastname}</td>
-                        <td>{userItem.email}</td>
-                        <td>{userItem.username}</td>
-                        <td>{userItem.phone}</td>
-                        <td>{userItem.address.city}</td>
-                        <td>
-                          <div className={classes.table_actions}>
-                            <button 
-                              className={classes.action_btn} 
-                              onClick={() => handleViewUser(userItem)}
-                              title="View User"
-                            >
-                              <FaEye />
-                            </button>
-                            <button 
-                              className={classes.action_btn} 
-                              onClick={() => handleEditUser(userItem)}
-                              title="Edit User"
-                            >
-                              <FaEdit />
-                            </button>
-                            <button 
-                              className={classes.action_btn_danger} 
-                              onClick={() => handleDeleteUser(userItem)}
-                              title="Delete User"
-                            >
-                              <FaTrash />
-                            </button>
-                          </div>
-                        </td>
+                {users.length === 0 ? (
+                  <div className={classes.no_results}>
+                    <h3>No Users Registered</h3>
+                    <p>Users will appear here when they register on the site</p>
+                  </div>
+                ) : (
+                  <table className={classes.users_table}>
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Display Name</th>
+                        <th>Email</th>
+                        <th>Email Verified</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {users.map((userItem) => (
+                        <tr key={userItem.id}>
+                          <td>{userItem.id.substring(0, 8)}...</td>
+                          <td>{userItem.displayName || 'N/A'}</td>
+                          <td>{userItem.email}</td>
+                          <td>
+                            <span className={`${classes.status_badge} ${userItem.emailVerified ? classes.active : classes.pending}`}>
+                              {userItem.emailVerified ? 'Verified' : 'Not Verified'}
+                            </span>
+                          </td>
+                          <td>{new Date(userItem.createdAt).toLocaleDateString()}</td>
+                          <td>
+                            <div className={classes.table_actions}>
+                              <button 
+                                className={classes.action_btn} 
+                                onClick={() => handleViewUser(userItem)}
+                                title="View User"
+                              >
+                                <FaEye />
+                              </button>
+                              <button 
+                                className={classes.action_btn_danger} 
+                                onClick={() => handleDeleteUser(userItem)}
+                                title="Delete User"
+                              >
+                                <FaTrash />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
               </div>
             </div>
           )}
@@ -1424,16 +1603,37 @@ const Admin = () => {
                     <span className={classes.modal_rating}>⭐ {selectedItem.rating.rate} ({selectedItem.rating.count} reviews)</span>
                   </div>
                 </>
+              ) : selectedItem.shopName ? (
+                // Shopper view
+                <>
+                  <div className={classes.shopper_view}>
+                    {selectedItem.logo && (
+                      <img src={selectedItem.logo} alt={selectedItem.shopName} className={classes.modal_logo} />
+                    )}
+                    <h3>{selectedItem.shopName}</h3>
+                    <div className={classes.user_details}>
+                      <p><strong>Owner:</strong> {selectedItem.ownerName}</p>
+                      <p><strong>Email:</strong> {selectedItem.email}</p>
+                      <p><strong>Phone:</strong> {selectedItem.phone || 'N/A'}</p>
+                      <p><strong>Address:</strong> {selectedItem.address || 'N/A'}</p>
+                      <p><strong>Description:</strong> {selectedItem.description || 'N/A'}</p>
+                      <p><strong>Status:</strong> <span className={`${classes.status_badge} ${classes[selectedItem.status]}`}>{selectedItem.status}</span></p>
+                      <p><strong>Products:</strong> {selectedItem.productsCount || 0}</p>
+                      <p><strong>Created:</strong> {new Date(selectedItem.createdAt).toLocaleDateString()}</p>
+                    </div>
+                  </div>
+                </>
               ) : (
                 // User view
                 <>
-                  <h3>{selectedItem.name.firstname} {selectedItem.name.lastname}</h3>
+                  <h3>{selectedItem.displayName || 'User'}</h3>
                   <div className={classes.user_details}>
-                    <p><strong>Username:</strong> {selectedItem.username}</p>
+                    <p><strong>User ID:</strong> {selectedItem.id}</p>
                     <p><strong>Email:</strong> {selectedItem.email}</p>
-                    <p><strong>Phone:</strong> {selectedItem.phone}</p>
-                    <p><strong>Address:</strong> {selectedItem.address.street}, {selectedItem.address.city}, {selectedItem.address.zipcode}</p>
-                    <p><strong>Geolocation:</strong> Lat: {selectedItem.address.geolocation.lat}, Long: {selectedItem.address.geolocation.long}</p>
+                    <p><strong>Email Verified:</strong> {selectedItem.emailVerified ? 'Yes' : 'No'}</p>
+                    <p><strong>Display Name:</strong> {selectedItem.displayName || 'N/A'}</p>
+                    <p><strong>Photo URL:</strong> {selectedItem.photoURL || 'N/A'}</p>
+                    <p><strong>Created At:</strong> {new Date(selectedItem.createdAt).toLocaleDateString()} at {new Date(selectedItem.createdAt).toLocaleTimeString()}</p>
                   </div>
                 </>
               )}
@@ -1442,16 +1642,122 @@ const Admin = () => {
         </div>
       )}
 
-      {/* Edit Modal */}
+      {/* Edit Modal - Products or Shoppers */}
       {showEditModal && selectedItem && (
         <div className={classes.modal_overlay} onClick={() => setShowEditModal(false)}>
           <div className={classes.modal_content} onClick={(e) => e.stopPropagation()}>
             <div className={classes.modal_header}>
-              <h2>Edit Product</h2>
+              <h2>{selectedItem.shopName ? 'Edit Shopper' : 'Edit Product'}</h2>
               <button className={classes.modal_close} onClick={() => setShowEditModal(false)}>×</button>
             </div>
             <div className={classes.modal_body}>
-              <div className={classes.form_grid}>
+              {selectedItem.shopName ? (
+                // Shopper Edit Form
+                <div className={classes.form_grid}>
+                  <div className={classes.form_group}>
+                    <label>Shop Name *</label>
+                    <input
+                      type="text"
+                      name="shopName"
+                      value={shopperForm.shopName}
+                      onChange={handleShopperFormChange}
+                      placeholder="Enter shop name"
+                    />
+                  </div>
+
+                  <div className={classes.form_group}>
+                    <label>Owner Name *</label>
+                    <input
+                      type="text"
+                      name="ownerName"
+                      value={shopperForm.ownerName}
+                      onChange={handleShopperFormChange}
+                      placeholder="Enter owner name"
+                    />
+                  </div>
+
+                  <div className={classes.form_group}>
+                    <label>Email *</label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={shopperForm.email}
+                      onChange={handleShopperFormChange}
+                      placeholder="shop@example.com"
+                    />
+                  </div>
+
+                  <div className={classes.form_group}>
+                    <label>Password</label>
+                    <input
+                      type="password"
+                      name="password"
+                      value={shopperForm.password}
+                      onChange={handleShopperFormChange}
+                      placeholder="Leave blank to keep current"
+                    />
+                  </div>
+
+                  <div className={classes.form_group}>
+                    <label>Phone</label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={shopperForm.phone}
+                      onChange={handleShopperFormChange}
+                      placeholder="+251 900 000 000"
+                    />
+                  </div>
+
+                  <div className={classes.form_group_full}>
+                    <label>Address</label>
+                    <input
+                      type="text"
+                      name="address"
+                      value={shopperForm.address}
+                      onChange={handleShopperFormChange}
+                      placeholder="Shop address"
+                    />
+                  </div>
+
+                  <div className={classes.form_group_full}>
+                    <label>Logo URL</label>
+                    <input
+                      type="text"
+                      name="logo"
+                      value={shopperForm.logo}
+                      onChange={handleShopperFormChange}
+                      placeholder="https://example.com/logo.png"
+                    />
+                  </div>
+
+                  <div className={classes.form_group_full}>
+                    <label>Description</label>
+                    <textarea
+                      name="description"
+                      value={shopperForm.description}
+                      onChange={handleShopperFormChange}
+                      placeholder="Shop description"
+                      rows="3"
+                    ></textarea>
+                  </div>
+
+                  <div className={classes.form_group}>
+                    <label>Status</label>
+                    <select
+                      name="status"
+                      value={shopperForm.status}
+                      onChange={handleShopperFormChange}
+                    >
+                      <option value="active">Active</option>
+                      <option value="inactive">Inactive</option>
+                      <option value="pending">Pending</option>
+                    </select>
+                  </div>
+                </div>
+              ) : (
+                // Product Edit Form
+                <div className={classes.form_grid}>
                 <div className={classes.form_group}>
                   <label>Product Title *</label>
                   <input
@@ -1541,11 +1847,15 @@ const Admin = () => {
                     placeholder="0"
                   />
                 </div>
-              </div>
+                </div>
+              )}
 
               <div className={classes.modal_actions}>
-                <button className={classes.modal_button_primary} onClick={handleUpdateProduct}>
-                  Update Product
+                <button 
+                  className={classes.modal_button_primary} 
+                  onClick={selectedItem.shopName ? handleUpdateShopper : handleUpdateProduct}
+                >
+                  {selectedItem.shopName ? 'Update Shopper' : 'Update Product'}
                 </button>
                 <button className={classes.modal_button} onClick={() => setShowEditModal(false)}>
                   Cancel
@@ -1556,16 +1866,122 @@ const Admin = () => {
         </div>
       )}
 
-      {/* Add Product Modal */}
+      {/* Add Modal - Products or Shoppers */}
       {showAddModal && (
         <div className={classes.modal_overlay} onClick={() => setShowAddModal(false)}>
           <div className={classes.modal_content} onClick={(e) => e.stopPropagation()}>
             <div className={classes.modal_header}>
-              <h2>Add New Product</h2>
+              <h2>{activeTab === 'shoppers' ? 'Register New Shopper' : 'Add New Product'}</h2>
               <button className={classes.modal_close} onClick={() => setShowAddModal(false)}>×</button>
             </div>
             <div className={classes.modal_body}>
-              <div className={classes.form_grid}>
+              {activeTab === 'shoppers' ? (
+                // Shopper Form
+                <div className={classes.form_grid}>
+                  <div className={classes.form_group}>
+                    <label>Shop Name *</label>
+                    <input
+                      type="text"
+                      name="shopName"
+                      value={shopperForm.shopName}
+                      onChange={handleShopperFormChange}
+                      placeholder="Enter shop name"
+                    />
+                  </div>
+
+                  <div className={classes.form_group}>
+                    <label>Owner Name *</label>
+                    <input
+                      type="text"
+                      name="ownerName"
+                      value={shopperForm.ownerName}
+                      onChange={handleShopperFormChange}
+                      placeholder="Enter owner name"
+                    />
+                  </div>
+
+                  <div className={classes.form_group}>
+                    <label>Email *</label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={shopperForm.email}
+                      onChange={handleShopperFormChange}
+                      placeholder="shop@example.com"
+                    />
+                  </div>
+
+                  <div className={classes.form_group}>
+                    <label>Password *</label>
+                    <input
+                      type="password"
+                      name="password"
+                      value={shopperForm.password}
+                      onChange={handleShopperFormChange}
+                      placeholder="Enter password"
+                    />
+                  </div>
+
+                  <div className={classes.form_group}>
+                    <label>Phone</label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={shopperForm.phone}
+                      onChange={handleShopperFormChange}
+                      placeholder="+251 900 000 000"
+                    />
+                  </div>
+
+                  <div className={classes.form_group_full}>
+                    <label>Address</label>
+                    <input
+                      type="text"
+                      name="address"
+                      value={shopperForm.address}
+                      onChange={handleShopperFormChange}
+                      placeholder="Shop address"
+                    />
+                  </div>
+
+                  <div className={classes.form_group_full}>
+                    <label>Logo URL</label>
+                    <input
+                      type="text"
+                      name="logo"
+                      value={shopperForm.logo}
+                      onChange={handleShopperFormChange}
+                      placeholder="https://example.com/logo.png"
+                    />
+                  </div>
+
+                  <div className={classes.form_group_full}>
+                    <label>Description</label>
+                    <textarea
+                      name="description"
+                      value={shopperForm.description}
+                      onChange={handleShopperFormChange}
+                      placeholder="Shop description"
+                      rows="3"
+                    ></textarea>
+                  </div>
+
+                  <div className={classes.form_group}>
+                    <label>Status</label>
+                    <select
+                      name="status"
+                      value={shopperForm.status}
+                      onChange={handleShopperFormChange}
+                    >
+                      <option value="active">Active</option>
+                      <option value="inactive">Inactive</option>
+                      <option value="pending">Pending</option>
+                    </select>
+                  </div>
+                </div>
+              ) : (
+                // Product Form
+                <div className={classes.form_grid}>
                 <div className={classes.form_group}>
                   <label>Product Title *</label>
                   <input
@@ -1655,11 +2071,15 @@ const Admin = () => {
                     placeholder="0"
                   />
                 </div>
-              </div>
+                </div>
+              )}
 
               <div className={classes.modal_actions}>
-                <button className={classes.modal_button_primary} onClick={handleSaveNewProduct}>
-                  Add Product
+                <button 
+                  className={classes.modal_button_primary} 
+                  onClick={activeTab === 'shoppers' ? handleSaveNewShopper : handleSaveNewProduct}
+                >
+                  {activeTab === 'shoppers' ? 'Register Shopper' : 'Add Product'}
                 </button>
                 <button className={classes.modal_button} onClick={() => setShowAddModal(false)}>
                   Cancel
@@ -1680,13 +2100,21 @@ const Admin = () => {
             </div>
             <div className={classes.modal_body}>
               <p className={classes.modal_message}>
-                Are you sure you want to delete {selectedItem.title ? `"${selectedItem.title.substring(0, 50)}..."` : `user "${selectedItem.username}"`}?
+                Are you sure you want to delete {
+                  selectedItem.title ? `"${selectedItem.title.substring(0, 50)}..."` : 
+                  selectedItem.shopName ? `shopper "${selectedItem.shopName}"` :
+                  `user "${selectedItem.email}"`
+                }?
               </p>
               <p className={classes.modal_warning}>This action cannot be undone.</p>
               <div className={classes.modal_actions}>
                 <button 
                   className={classes.modal_button_danger} 
-                  onClick={selectedItem.title ? confirmDelete : confirmDeleteUser}
+                  onClick={
+                    selectedItem.shopName ? confirmDeleteShopper :
+                    selectedItem.title ? confirmDelete : 
+                    confirmDeleteUser
+                  }
                 >
                   Delete
                 </button>

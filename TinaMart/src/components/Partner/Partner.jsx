@@ -1,8 +1,12 @@
 import React from 'react';
 import classes from './partner.module.css';
-import { Link } from 'react-router-dom';
+import { useSettings } from '../../Utility/SettingsContext';
+import { useTranslation } from '../../Utility/translations';
 
 function Partner() {
+  const { settings } = useSettings();
+  const t = useTranslation(settings.language);
+  
   const partners = [
     {
       name: 'Ethio Telecom',
@@ -64,7 +68,7 @@ function Partner() {
     <section className={classes.partner_section}>
       <div className={classes.partner_container}>
         <div className={classes.section_header}>
-          <h2>Our Partners</h2>
+          <h2>{t('ourPartners')}</h2>
         </div>
         
         <div className={classes.marquee_wrapper}>
