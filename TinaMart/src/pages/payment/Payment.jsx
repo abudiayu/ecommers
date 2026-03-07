@@ -62,10 +62,13 @@ function Payment() {
   });
 
   setProcessing(false);
+  navigate("/order")
   //3, after confirmation ------> order firebase dtatbase save, clear basket {to store in firebaseStore } 
 
     await setDoc(
-      doc(db, "users", user.uid, "orders", paymentIntent.id),
+      doc(db,
+         "users", user.uid,
+         "orders", paymentIntent.id),
       {
         basket: basket,
         amount: paymentIntent.amount,
