@@ -69,6 +69,34 @@ function Partner() {
       <div className={classes.partner_container}>
         <div className={classes.section_header}>
           <h2>{t('ourPartners')}</h2>
+          <h3 
+            className={classes.section_subtitle}
+            onClick={() => {
+              const shopSection = document.getElementById('shop-section');
+              const collapsedHeader = shopSection?.querySelector('[class*="collapsed_header"]');
+              
+              // If shop section is collapsed, click it to expand
+              if (collapsedHeader) {
+                collapsedHeader.click();
+              }
+              
+              // Scroll to shop section
+              if (shopSection) {
+                setTimeout(() => {
+                  const headerOffset = 100;
+                  const elementPosition = shopSection.getBoundingClientRect().top;
+                  const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                  window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                  });
+                }, 100);
+              }
+            }}
+          >
+            {t('shops')}
+          </h3>
         </div>
         
         <div className={classes.marquee_wrapper}>

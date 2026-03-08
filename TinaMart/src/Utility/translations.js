@@ -84,6 +84,7 @@ export const translations = {
     // Partners
     ourPartners: "Our Trusted Partners",
     trustedByLeading: "Trusted by leading Ethiopian companies",
+    shops: "Shops",
     
     // Footer Services
     tinaMartMusic: "TinaMart Music",
@@ -213,6 +214,7 @@ export const translations = {
     // Partners
     ourPartners: "የእኛ የታመኑ አጋሮች",
     trustedByLeading: "በመሪ የኢትዮጵያ ኩባንያዎች የታመነ",
+    shops: "ሱቆች",
     
     // Footer Services
     tinaMartMusic: "ቲናማርት ሙዚቃ",

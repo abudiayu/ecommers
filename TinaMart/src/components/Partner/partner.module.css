@@ -14,8 +14,9 @@
 
 .section_header {
   display: flex;
+  flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 25px;
 }
 
@@ -23,7 +24,33 @@
   font-size: 1.8rem;
   color: #1a1a1a;
   font-weight: 700;
+  margin: 0 0 5px 0;
+}
+
+.section_subtitle {
+  font-size: 1.4rem;
+  color: #FFD700;
+  font-weight: 600;
   margin: 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-block;
+  position: relative;
+}
+
+.section_subtitle:hover {
+  color: #FFC107;
+  transform: translateX(5px);
+}
+
+.section_subtitle::after {
+  content: '→';
+  margin-left: 8px;
+  transition: margin-left 0.3s ease;
+}
+
+.section_subtitle:hover::after {
+  margin-left: 12px;
 }
 
 /* Marquee Container */
@@ -124,6 +151,10 @@
     font-size: 1.5rem;
   }
 
+  .section_subtitle {
+    font-size: 1.2rem;
+  }
+
   .marquee_content {
     gap: 20px;
     animation: marquee 25s linear infinite;
@@ -148,6 +179,10 @@
 
   .section_header h2 {
     font-size: 1.3rem;
+  }
+
+  .section_subtitle {
+    font-size: 1.1rem;
   }
 
   .marquee_content {
